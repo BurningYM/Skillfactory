@@ -205,10 +205,12 @@ SELECT f.flight_id,
        97 AS ammount_of_seats,
        COUNT(amount) AS taken_seats,
        f.actual_arrival - f.actual_departure AS fly_time,
-       (DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69 AS fuel_cost,
+       (DATE_PART('hour', f.actual_arrival - f.actual_departure) +
+       DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69 AS fuel_cost,
        AVG(amount) AS avg_ticket_price,
        SUM(amount) AS ticket_profit,
-       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69) AS overall_profit
+       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) +
+       DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69) AS overall_profit
 FROM dst_project.flights AS f
 JOIN dst_project.ticket_flights AS t ON f.flight_id = t.flight_id
 JOIN dst_project.airports AS a ON a.airport_code = f.arrival_airport
@@ -230,10 +232,12 @@ SELECT f.flight_id,
        130 AS ammount_of_seats,
        COUNT(amount) AS taken_seats,
        f.actual_arrival - f.actual_departure AS fly_time,
-       (DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69 AS fuel_cost,
+       (DATE_PART('hour', f.actual_arrival - f.actual_departure) +
+       DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69 AS fuel_cost,
        AVG(amount) AS avg_ticket_price,
        SUM(amount) AS ticket_profit,
-       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69) AS overall_profit
+       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) +
+       DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69) AS overall_profit
 FROM dst_project.flights AS f
 FULL JOIN dst_project.ticket_flights AS t ON f.flight_id = t.flight_id
 JOIN dst_project.airports AS a ON a.airport_code = f.arrival_airport
