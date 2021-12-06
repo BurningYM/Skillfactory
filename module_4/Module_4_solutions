@@ -193,3 +193,56 @@ WHERE ac.model in ('Boeing 737-300',
 GROUP BY ac.model
 ORDER BY 2 DESC
 LIMIT 1
+
+Задание 6.1
+
+SELECT f.flight_id,
+       'Anapa' AS departure_city,
+       a.city AS arrival_city,
+       'Sukhoi Superjet-100' AS model,
+       3000 AS flight_range,
+       1700 AS fuel_consumption,
+       97 AS ammount_of_seats,
+       COUNT(amount) AS taken_seats,
+       f.actual_arrival - f.actual_departure AS fly_time,
+       (DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69 AS fuel_cost,
+       AVG(amount) AS avg_ticket_price,
+       SUM(amount) AS ticket_profit,
+       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 1700 * 42.69) AS overall_profit
+FROM dst_project.flights AS f
+JOIN dst_project.ticket_flights AS t ON f.flight_id = t.flight_id
+JOIN dst_project.airports AS a ON a.airport_code = f.arrival_airport
+WHERE departure_airport = 'AAQ'
+  AND (DATE_TRUNC('month', scheduled_departure) IN ('2017-01-01',
+                                                    '2017-02-01',
+                                                    '2017-12-01'))
+  AND status NOT IN ('Cancelled')
+  AND f.aircraft_code = 'SU9'
+GROUP BY f.flight_id,
+         a.city
+UNION
+SELECT f.flight_id,
+       'Anapa' AS departure_city,
+       a.city AS arrival_city,
+       'Boeing 737-300' AS model,
+       4200 AS flight_range,
+       2400 AS fuel_consumption,
+       130 AS ammount_of_seats,
+       COUNT(amount) AS taken_seats,
+       f.actual_arrival - f.actual_departure AS fly_time,
+       (DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69 AS fuel_cost,
+       AVG(amount) AS avg_ticket_price,
+       SUM(amount) AS ticket_profit,
+       SUM(amount) - ((DATE_PART('hour', f.actual_arrival - f.actual_departure) + DATE_PART('minute', f.actual_arrival - f.actual_departure) / 60) * 2400 * 42.69) AS overall_profit
+FROM dst_project.flights AS f
+FULL JOIN dst_project.ticket_flights AS t ON f.flight_id = t.flight_id
+JOIN dst_project.airports AS a ON a.airport_code = f.arrival_airport
+WHERE departure_airport = 'AAQ'
+  AND (DATE_TRUNC('month', scheduled_departure) IN ('2017-01-01',
+                                                    '2017-02-01',
+                                                    '2017-12-01'))
+  AND status NOT IN ('Cancelled')
+  AND f.aircraft_code = '733'
+GROUP BY f.flight_id,
+         a.city
+ORDER BY 1
